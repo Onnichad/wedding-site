@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RSVP — Tanya & Michelle</title>
+    <meta name="theme-color" content="#F6E9E7" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+
+  <body>
+    <header>
+      <div class="container nav">
+        <div class="brand">
+          <strong>Tanya & Michelle</strong>
+          <span>Saturday, April 25, 2026 • Lexington</span>
+        </div>
+
+        <nav class="links">
+          <a href="index.html">Home</a>
+          <a href="infos.html">Infos</a>
+          <a href="programme.html">Schedule</a>
+          <a href="faq.html">Q&A</a>
+          <a href="rsvp.html" class="cta">RSVP</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="rsvp">
+        <div class="sectionHead">
+          <div>
+            <h2>RSVP</h2>
+            <p>Please fill out the form to confirm your attendance.</p>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <h3>Your RSVP</h3>
+
+            <form
+              name="rsvp"
+              method="POST"
+              data-netlify="true"
+              netlify-honeypot="bot-field"
+              action="merci.html"
+            >
+              <input type="hidden" name="form-name" value="rsvp" />
+              <p style="display: none">
+                <label>Do not fill in: <input name="bot-field" /></label>
+              </p>
+
+              <div class="formRow">
+                <label>
+                  First Name
+                  <input
+                    type="text"
+                    name="firstName"
+                    autocomplete="given-name"
+                    required
+                  />
+                </label>
+                <label>
+                  Last Name
+                  <input
+                    type="text"
+                    name="lastName"
+                    autocomplete="family-name"
+                    required
+                  />
+                </label>
+              </div>
+
+              <fieldset>
+                <legend>Will we see you there ?</legend>
+                <div class="radios">
+                  <label class="radio">
+                    <input type="radio" name="attending" value="yes" required />
+                    Yes
+                  </label>
+
+                  <label class="radio">
+                    <input type="radio" name="attending" value="no" required />
+                    No
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend>Will you be accompanied ?</legend>
+                <div class="radios">
+                  <label class="radio">
+                    <input
+                      type="radio"
+                      name="bringingGuests"
+                      value="no"
+                      required
+                    />
+                    No
+                  </label>
+
+                  <label class="radio">
+                    <input
+                      type="radio"
+                      name="bringingGuests"
+                      value="yes"
+                      required
+                    />
+                    Yes
+                  </label>
+                </div>
+              </fieldset>
+
+              <label>
+                If yes, how many additional people ?
+                <input
+                  type="number"
+                  name="extraGuests"
+                  min="1"
+                  max="10"
+                  value="1"
+                />
+              </label>
+
+              <div class="note">
+                💡 If you respond <b>No</b> to “Will we see you there?”, the
+                rest will be automatically disabled.
+              </div>
+
+              <button class="submit" type="submit">Send my RSVP</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3>Things to know</h3>
+            <ul class="list">
+              <li class="item">
+                <b>Confirmation</b>
+                <span
+                  >After submission, you will be redirected to a “Thank you”
+                  page.</span
+                >
+              </li>
+              <li class="item">
+                <b>Modification</b>
+                <span
+                  >If you need to change your response, please send a message to
+                  tanyamichellereception@gmail.com</span
+                >
+              </li>
+              <li class="item">
+                <b>Confidentiality</b>
+                <span>Responses are visible only to us.</span>
+              </li>
+              <li class="item">
+                <b>Need help?</b>
+                <span>tanyamichellereception@gmail.com</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="footerCard">
+          <div>© Tanya & Michelle — Thanks 🕊️</div>
+          <div class="smallLinks">
+            <a href="index.html">Home</a>
+            <a href="rsvp.html">RSVP</a>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
