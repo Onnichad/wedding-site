@@ -706,3 +706,8 @@ html {
     background: #fff;
     /* pour les bords si l'image ne remplit pas tout */
 }
+
+.isDisabled {
+    opacity: .55;
+    pointer-events: none;
+}

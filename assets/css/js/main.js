@@ -1,10 +1,11 @@
 // ====== Countdown (mets la date du mariage ici) ======
-// Exemple: "2026-07-12T15:30:00"
+// Exemple: "2026-07-12T15:30:00-04:00"
 const WEDDING_DATE_ISO = '2026-04-25T18:00:00-05:00';
 
 function pad(n) {
   return String(n).padStart(2, '0');
 }
+
 function tick() {
   const dEl = document.getElementById('d');
   const hEl = document.getElementById('h');
@@ -38,72 +39,101 @@ function tick() {
   mEl.textContent = pad(mins);
   sEl.textContent = pad(secs);
 }
+
 setInterval(tick, 1000);
 tick();
 console.log('Wedding date:', WEDDING_DATE_ISO, new Date(WEDDING_DATE_ISO));
 
 // ====== RSVP logic (désactive sections selon réponses) ======
-const attendingYes = document.querySelector(
-  'input[name="attending"][value="yes"]',
-);
-const attendingNo = document.querySelector(
-  'input[name="attending"][value="no"]',
-);
+document.addEventListener('DOMContentLoaded', () => {
+  const attendingYes = document.querySelector(
+    'input[name="attending"][value="yes"]',
+  );
+  const attendingNo = document.querySelector(
+    'input[name="attending"][value="no"]',
+  );
 
-const bringingYes = document.querySelector(
-  'input[name="bringingGuests"][value="yes"]',
-);
-const bringingNo = document.querySelector(
-  'input[name="bringingGuests"][value="no"]',
-);
+  const bringingYes = document.querySelector(
+    'input[name="bringingGuests"][value="yes"]',
+  );
+  const bringingNo = document.querySelector(
+    'input[name="bringingGuests"][value="no"]',
+  );
 
-const extraGuests = document.querySelector('input[name="extraGuests"]');
+  const extraGuests = document.querySelector('input[name="extraGuests"]');
 
-function setExtraGuestsEnabled(enabled) {
-  if (!extraGuests) return;
-  extraGuests.disabled = !enabled;
-  if (!enabled) extraGuests.value = 0;
-  if (enabled && (!extraGuests.value || Number(extraGuests.value) < 1))
-    extraGuests.value = 1;
-}
-
-function setBringingEnabled(enabled) {
-  if (!bringingYes || !bringingNo) return;
-  bringingYes.disabled = !enabled;
-  bringingNo.disabled = !enabled;
-  if (!enabled) {
-    bringingNo.checked = true;
-    setExtraGuestsEnabled(false);
-  }
-}
-
-function sync() {
-  const attending = document.querySelector(
-    'input[name="attending"]:checked',
-  )?.value;
-
-  if (attending === 'no') {
-    setBringingEnabled(false);
-    setExtraGuestsEnabled(false);
+  // Si on n'est pas sur la page RSVP, on sort proprement
+  if (
+    !attendingYes ||
+    !attendingNo ||
+    !bringingYes ||
+    !bringingNo ||
+    !extraGuests
+  )
     return;
+
+  function setExtraGuestsMode(mode) {
+    // mode = "disabled0" | "enabledMin1"
+    if (mode === 'disabled0') {
+      extraGuests.min = '0';
+      extraGuests.value = '0';
+      extraGuests.readOnly = true; // meilleur que disabled (Netlify recevra la valeur)
+      extraGuests.disabled = false; // on laisse activé pour que la valeur soit envoyée
+      return;
+    }
+
+    // enabledMin1
+    extraGuests.readOnly = false;
+    extraGuests.min = '1';
+    if (!extraGuests.value || Number(extraGuests.value) < 1) {
+      extraGuests.value = '1';
+    }
   }
 
-  setBringingEnabled(true);
+  function setBringingEnabled(enabled) {
+    bringingYes.disabled = !enabled;
+    bringingNo.disabled = !enabled;
 
-  const bringing = document.querySelector(
-    'input[name="bringingGuests"]:checked',
-  )?.value;
-  setExtraGuestsEnabled(bringing === 'yes');
-  if (bringing === 'no' && extraGuests) extraGuests.value = 0;
-}
+    if (!enabled) {
+      bringingNo.checked = true;
+      setExtraGuestsMode('disabled0');
+    }
+  }
 
-attendingYes?.addEventListener('change', sync);
-attendingNo?.addEventListener('change', sync);
-bringingYes?.addEventListener('change', sync);
-bringingNo?.addEventListener('change', sync);
+  function sync() {
+    const attending = document.querySelector(
+      'input[name="attending"]:checked',
+    )?.value;
 
-// Valeurs initiales
-if (extraGuests) {
-  extraGuests.value = 0;
-  setExtraGuestsEnabled(false);
-}
+    // Si "No" -> on force bringing = no et extraGuests = 0
+    if (attending === 'no') {
+      setBringingEnabled(false);
+      setExtraGuestsMode('disabled0');
+      return;
+    }
+
+    // Sinon (attending yes) -> bringing activé
+    setBringingEnabled(true);
+
+    const bringing = document.querySelector(
+      'input[name="bringingGuests"]:checked',
+    )?.value;
+
+    if (bringing === 'yes') {
+      setExtraGuestsMode('enabledMin1');
+    } else {
+      // bringing = no (ou pas encore choisi)
+      setExtraGuestsMode('disabled0');
+    }
+  }
+
+  attendingYes.addEventListener('change', sync);
+  attendingNo.addEventListener('change', sync);
+  bringingYes.addEventListener('change', sync);
+  bringingNo.addEventListener('change', sync);
+
+  // Init
+  // Valeurs propres au chargement : extraGuests à 0 tant qu'on n'a pas yes+yes
+  setExtraGuestsMode('disabled0');
+  sync();
+});

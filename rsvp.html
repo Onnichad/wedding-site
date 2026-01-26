@@ -87,7 +87,7 @@
                 </div>
               </fieldset>
 
-              <fieldset>
+              <fieldset id="bringingFieldset">
                 <legend>Will you be accompanied ?</legend>
                 <div class="radios">
                   <label class="radio">
@@ -99,7 +99,6 @@
                     />
                     No
                   </label>
-
                   <label class="radio">
                     <input
                       type="radio"
@@ -117,9 +116,10 @@
                 <input
                   type="number"
                   name="extraGuests"
-                  min="1"
+                  id="extraGuests"
+                  min="0"
                   max="10"
-                  value="1"
+                  value="0"
                 />
               </label>
 
